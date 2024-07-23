@@ -94,7 +94,7 @@ namespace Aquarium
             int numberFish = ReadNumberFish();
 
             for (int i = 0; i < numberFish; i++)
-                _fish.Add(new Fish());
+                _fish.Add(CreatorFish.GenerateFish());
         }
 
         private void TryDeleteFish()
@@ -176,11 +176,7 @@ namespace Aquarium
 
     class CreatorFish
     {
-        protected string Name;
-        protected int Age;
-        protected int MaxAge;
-
-        public CreatorFish()
+        public static Fish GenerateFish()
         {
             int minLimitAge = 1;
             int maxLimitAge = 5;
@@ -188,15 +184,10 @@ namespace Aquarium
             int minLimitMaxAge = 10;
             int maxLimitMaxAge = 20;
 
-            Name = GetName();
-            Age = UserUtils.GenerateRandomNumber(minLimitAge, maxLimitAge);
-            MaxAge = UserUtils.GenerateRandomNumber(minLimitMaxAge, maxLimitMaxAge);
-            IsAlive = true;
+            return new Fish(GetName(), UserUtils.GenerateRandomNumber(minLimitAge, maxLimitAge), UserUtils.GenerateRandomNumber(minLimitMaxAge, maxLimitMaxAge));
         }
 
-        public bool IsAlive { get; protected set; }
-
-        private string GetName()
+        private static string GetName()
         {
             List<string> names = new List<string>() { "Немо", "Жабр", "Персик", "Жак", "Пузырь", "Грот", "Бульк", "Бриз", "Штиль", "Марлин", "Дори", "Якорь" };
 
@@ -204,8 +195,22 @@ namespace Aquarium
         }
     }
 
-    class Fish : CreatorFish
+    class Fish
     {
+        private string Name;
+        private int Age;
+        private int MaxAge;
+
+        public Fish(string name, int age, int maxAge)
+        {
+            Name = name;
+            Age = age;
+            MaxAge = maxAge;
+            IsAlive = true;
+        }
+
+        public bool IsAlive { get; private set; }
+
         public void GetOld()
         {
             if (Age >= MaxAge)
